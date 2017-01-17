@@ -1,4 +1,4 @@
-### Analyze a twitter account
+## VISUALICE A TWITTER ACCOUNT
 
 ## SUMMARY
 
@@ -12,15 +12,15 @@ I wanted to get some information out of my tweeter account, things like:
 
 The goal is to present all this information through visualizations.
 
-The coolest thing about this is that you can run the notebook (my_twitter_viz.ipynb) with your own keys and get the info from your tweeter
+The coolest thing about this is that you can run the notebook (my_twitter_viz.ipynb) with your own keys and get the info from your twitter
 
-Bonus: tweet topics (LDA)
 
 ## FILES:
 
-* twitter.ipynb: Notebook where I used as scratch paper to clean data, EDA, and to play with the plots. Also I played a bit with LDA to extract tweet topics.
-
 * my_twitter_viz.ipynb: I put all together to get 1 final viz. This is the notebook you should use if you want to get your own tweeter viz.
+
+* twitter.ipynb: Notebook where I used as scratch paper to clean data, EDA, play with the plots settings, and to experiment with different algorithms for sentiment analysis. Also I played a bit with LDA to extract tweet topics.
+
 
 ## USE 
 
@@ -52,7 +52,7 @@ There are several things I still want to do:
 
 * Add details as username
 * Time Series of tweets
-* LDA for topics modeling
+* LDA for topic modeling
 
 
 
