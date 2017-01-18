@@ -8,7 +8,7 @@ I wanted to get some information out of my tweeter account, things like:
 * What are the most common words used?
 * What about hashtags?
 * What kind of tweets are there?
-* Sentiment analysis (logistic regression) of tweets (neutral tweets count as positive). This is basically to know how much negativity you are ingesting each day :)
+* Sentiment analysis (logistic regression) of tweets (neutral tweets count as positive). Training set from http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/
 
 The goal is to present all this information through visualizations.
 
@@ -50,9 +50,10 @@ Here is the visualization I got for my twitter account (200 for each of the acco
 
 There are several things I still want to do:
 
-* Add details as username
-* Time Series of tweets
-* LDA for topic modeling
+* Add details as username and number of people following.
+* Sentiment Analysis: divide tweets by language then do SA
+* Number of tweets per date (time series plot)
+* LDA for topic modeling (code in scratch notebook: twitter.ipynb)
 
 
 
