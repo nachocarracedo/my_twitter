@@ -1,4 +1,9 @@
-APP_KEY = 'dHoMJGLVscXXQg62OkbrW7Krn'
-APP_SECRET = '5UenATEgQ0XsmPQ1sCyms6JgMk0oKqkCVKz3IVAmGP2rCqpyWc'
-OAUTH_TOKEN = '288137409-DqBcvXt0iHp52GLNWxF1o9QFs2CNYdFUWkWGy71q'
-OAUTH_TOKEN_SECRET = 'BFjCMrJwluTZzDaLQ2UeN3EhX16hVNunZcqhIiHOt3IGS' 
+APP_KEY = ""
+APP_SECRET = ""
+OAUTH_TOKEN = ""
+OAUTH_TOKEN_SECRET = ""
+
+try:
+from .private import *
+except Exception:
+pass
