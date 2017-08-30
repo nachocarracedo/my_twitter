@@ -1,10 +1,12 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from mpl_toolkits.basemap import Basemap
-%matplotlib inline
 plt.style.use('fivethirtyeight')
 
 from wordcloud import WordCloud, STOPWORDS
@@ -29,8 +31,10 @@ from langdetect import detect
 
 if __name__ == "__main__":
 
+	start = time.time()
 	############### get tweets
 	# twython auth
+	print("1/8 Getting tweets ... ")
 	twitter = Twython(settings.APP_KEY,
 					  settings.APP_SECRET,
 					  settings.OAUTH_TOKEN,
@@ -45,7 +49,7 @@ if __name__ == "__main__":
 	
 	# get 200 tweets and metadata from each friend (can get more metadata if needed!)
 	for user_id in following:
-		tweets200 = twitter.get_user_timeline(user_id=user_id,count=4)
+		tweets200 = twitter.get_user_timeline(user_id=user_id,count=200)
 		for t in tweets200:
 			user_ids.append(user_id)
 			texts.append(t["text"])
@@ -87,11 +91,12 @@ if __name__ == "__main__":
 	
 	type_tweet = mytweets.apply(tweet_type,1)
 	
+	
+	print("2/8 Cleaning tweets ... ")
 	############### clean tweets
 	stop = stopwords.words('english') + stopwords.words('spanish')
-	other_stop = ['via','&amp;', 'now','one','thing','us', 'will',"it's",'it',
-				  "i'm","u","you","yet", "say","much", "gt", "new", "us", "also","don't"]
-	stop = set(stop + other_stop)
+	
+	stop = set(stop + settings.other_stop_words)
 	punctuationset = set(string.punctuation)
 
 	def clean_tweets (tweets_string, punctuation=True, lemmatize=False, stopwords=True):
@@ -141,7 +146,7 @@ if __name__ == "__main__":
 	words_reply = clean_tweets(' '.join(mytweets[mytweets["in_reply"] != "None"].text),
 							   lemmatize=False)
 							   
-	
+	print("3/8 Getting languages of tweets ... ")
 	############### lenguage of tweets	
 	def leng(row):
 		text = clean_tweets(row['text'])
@@ -157,7 +162,7 @@ if __name__ == "__main__":
 	mytweets_len = mytweets[mytweets["lenguage"]!= 'fail']["lenguage"]
 	len_top4 = mytweets_len.value_counts()[:4]
 		
-	
+	print("4/8 Top hashtags ... ")
 	############### get top hashtags and words
 	def top(xs, top=-1):
 		"""Gets words that show up more, option 'top' limits to that number"""
@@ -173,8 +178,10 @@ if __name__ == "__main__":
 	top20words = pd.DataFrame(top([x for x in words.split()], top=20),
 							  columns=["word", "count"])
 
-
+	
+	
 	################  location of followings (count)
+	print("5/8 Locations ... ")
 	locations = top(user_location)
 	
 	# get more info about the location using google maps API
@@ -205,6 +212,7 @@ if __name__ == "__main__":
 	followers = twitter.verify_credentials()['followers_count']
 	
 	############### Sentiment analysis
+	print("6/8 Sentiment analysis ... ")
 	# Logistic regression (many models were tested using CV, lg was the best performing one)
 	sa_train = pd.read_csv(".\\data\\Sentiment Analysis Dataset.csv",error_bad_lines=False)
 	x_sa = sa_train["SentimentText"]
@@ -215,18 +223,18 @@ if __name__ == "__main__":
 	# This is the model that was fit and saved
 	#lge = LogisticRegression(random_state=23, fit_intercept=True, C=0.5, class_weight='balanced')
 	# get my data ready for the molel
-	mytweets_eng = mytweets[mytweets['lenguage'] == 'eng']
+	mytweets_eng = mytweets[mytweets['lenguage'] == 'en']
 	x_unseen = vectorizer.transform(mytweets_eng['text'].map(clean_tweets))
 	# load the model from disk
 	filename = 'lg_sa_model.sav'
 	lgmodel = pickle.load(open('./models/'+filename, 'rb'))
 	predictions_unseen = lgmodel.predict(x_unseen)
 	prob_unseen = lgmodel.predict_proba(x_unseen)
-	results = pd.DataFrame({'Prediction':predictions_unseen,'Prob':list(prob_unseen),'tweet':mytweets['text']})
+	results = pd.DataFrame({'Prediction':predictions_unseen,'Prob':list(prob_unseen),'tweet':mytweets_eng['text']})
 	
 	
 	
-	
+	print("7/8 Time Series ... ")
 	############### number of tweets per date (time series plot)
 	mytweets['date'] = pd.to_datetime(mytweets.creation).dt.date
 	mytweets['year'] = pd.to_numeric(pd.to_datetime(mytweets.creation).dt.year)
@@ -254,9 +262,9 @@ if __name__ == "__main__":
 	ts.columns=['date','count']
 		
 		
-		
+	print("8/8 Creating viz ... ")	
 	################################ VIZ ######################################
-	fig = plt.figure(figsize=(15,35))
+	fig = plt.figure(figsize=(15,40))
 
 	#type of tweets
 	ax1 = plt.subplot2grid((8,2), (0,1))           
@@ -371,82 +379,10 @@ if __name__ == "__main__":
 	plt.title("Accounts you follow MAP",fontweight = 'bold', size=20)
 	plt.margins(0.5)
 
-	plt.savefig('.\\images\\my_twitter.png', bbox_inches='tight')
-	plt.tight_layout()
-	plt.show()
-
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-			
-			
-			
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	plt.savefig('./images/twitter_viz.png', bbox_inches='tight')
+	#plt.tight_layout()
+	#plt.show()
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	print("Done. Find your viz in /images folder")
+	print('The script ran for ', time.time()-start, 'seconds.')

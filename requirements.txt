@@ -5,9 +5,9 @@ twython
 nltk
 gensim
 wordcloud
-sklearn
-mpl_toolkits.basemap
-nltk
 requests
 langdetect
+sklearn
+nltk
+
 
