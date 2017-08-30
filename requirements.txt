@@ -1,0 +1,13 @@
+numpy
+pandas
+matplotlib
+twython
+nltk
+gensim
+wordcloud
+sklearn
+mpl_toolkits.basemap
+nltk
+requests
+langdetect
+

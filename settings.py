@@ -4,6 +4,6 @@ OAUTH_TOKEN = ""
 OAUTH_TOKEN_SECRET = ""
 
 try:
-from .private import *
+	from private import *
 except Exception:
-pass
+	pass
