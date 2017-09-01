@@ -2,21 +2,21 @@
 
 ## SUMMARY
 
-This script will output a visualization of you twitter account. The script will gather the last 200 of all the accounts you follow and it will create a visualization that shows:
+This script will output a visualization of you twitter account. The script will gather the last 200 tweets of all the accounts you follow and it will create a visualization that shows:
 
-* Username, number of followers and friends
+* Username, account creating date, and number of followers and following
 * Number of tweets, retweets, and replies
 * Wordcloud of tweets, retweets, replies, and all tweets together(This blog post explains how the wordclouds are done: http://peekaboo-vision.blogspot.de/2012/11/a-wordcloud-in-python.html)
 * Top 20 hashtags
-* Where are the people you follow from? [MAP]
-* Sentiment analysis of tweets (neutral tweets count as positive). 
+* A map that shows where the people/accounts you follow are located 
+* Sentiment analysis of tweets (neutral tweets count as positive)
 
 
 ## OUTPUT
 
 As an example, here is the visualization I got for my twitter account:
 
-![Alt text](/images/my_twitter.png?raw=true)
+![Alt text](/images/twitter_viz.png?raw=true)
 
 
 ## FILES:
@@ -35,12 +35,14 @@ As an example, here is the visualization I got for my twitter account:
 3) Get your twitter keys:
 
 * Create a Twitter user account if you do not already have one.
-Go to https://apps.twitter.com/ and log in with your Twitter user account. This step gives you a Twitter dev account under the same name as your user account.
+* Go to https://apps.twitter.com/ and log in with your Twitter user account. This step gives you a Twitter dev account under the same name as your user account.
 * Click “Create New App”
 * Fill out the form, agree to the terms, and click “Create your Twitter application”
 * In the next page, click on “Keys and Access Tokens” tab, and copy your “API key” and “API secret”. Scroll down and click “Create my access token”, and copy your “Access token” and “Access token secret”. 
 
 4) Add your keys to seetings.py file. Also add extra stopwords so they don't show up in wordclouds.
+
+5) create a folder inside the projected called *data* and put inside *Sentiment Analysis Dataset.csv*. You can get this file from  http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/ 
 
 5) Run script and enjoy your viz!!
 

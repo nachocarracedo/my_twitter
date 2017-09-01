@@ -47,6 +47,13 @@ if __name__ == "__main__":
 	user_location = []
 	following = twitter.get_friends_ids()["ids"]
 	
+	############### save details of the account
+	#Add details as username and number of people following.
+	name = twitter.verify_credentials()['name']
+	date_creation = twitter.verify_credentials()['created_at']
+	nfollowing = twitter.verify_credentials()['friends_count']
+	nfollowers = twitter.verify_credentials()['followers_count']
+	
 	# get 200 tweets and metadata from each friend (can get more metadata if needed!)
 	for user_id in following:
 		tweets200 = twitter.get_user_timeline(user_id=user_id,count=200)
@@ -90,6 +97,8 @@ if __name__ == "__main__":
 			return "tweet"
 	
 	type_tweet = mytweets.apply(tweet_type,1)
+	
+	
 	
 	
 	print("2/8 Cleaning tweets ... ")
@@ -203,13 +212,7 @@ if __name__ == "__main__":
 	location_plot = location_df.groupby("coordinates")["count"].sum()
 	location_plot.sort_values(inplace=True)
 		
-		
-	############### save details of the account
-	#Add details as username and number of people following.
-	name = twitter.verify_credentials()['name']
-	date_creation = twitter.verify_credentials()['created_at']
-	following = twitter.verify_credentials()['friends_count']
-	followers = twitter.verify_credentials()['followers_count']
+	
 	
 	############### Sentiment analysis
 	print("6/8 Sentiment analysis ... ")
@@ -282,8 +285,8 @@ if __name__ == "__main__":
 	style2 = dict(size=18, color='black',fontweight = 'bold')
 	ax2.text(0.3, 0.8, str(name), **style2)
 	ax2.text(0.3, 0.6, str(date_creation[4:10].strip()+date_creation[-5:]), **style2)
-	ax2.text(0.3, 0.4, str(following), **style2)
-	ax2.text(0.3, 0.2, str(followers), **style2)
+	ax2.text(0.3, 0.4, str(nfollowing), **style2)
+	ax2.text(0.3, 0.2, str(nfollowers), **style2)
 	ax2.axis('off')
 	ax2.grid(False)
 	ax2.set_title("Account information",fontweight = 'bold', size=20)
@@ -296,7 +299,7 @@ if __name__ == "__main__":
 	ax7.plot(ts.date, ts['count'], label='tweets')
 	plt.xticks(rotation=0)
 	plt.legend()
-	plt.margins(0.05)
+	plt.margins(0.5)
 
 	#worldcloud
 	title = ["All Tweets", "Regular Tweets","Retweets","Replies"]
@@ -315,6 +318,7 @@ if __name__ == "__main__":
 		#plt.extend(extent=[0,100,0,1], aspect='auto')
 		plt.title(title[i],fontweight = 'bold', size=20)
 		plt.axis('off')
+		plt.margins(0.5)
 		#plt.show()
 		i+=1
 
@@ -332,7 +336,7 @@ if __name__ == "__main__":
 	ax3.set_ylabel("Hashtags")
 	ax3.set_title("Top 20 Hashtags",fontweight = 'bold', size=20)
 	plt.gca().invert_yaxis()
-	plt.margins(0.05)
+	plt.margins(0.5)
 
 	# sentiment analysis
 	ax4 = plt.subplot2grid((8,2), (4,1), rowspan=1)
@@ -340,13 +344,13 @@ if __name__ == "__main__":
 			autopct='%1.1f%%', shadow=False,
 			startangle=90, labels=["Positive+Neutral","Negative"])#,colors=["blue","red"])
 	plt.title("Sentiment Analysis",fontweight = 'bold', size=20)
-	plt.margins(0.05)
+	plt.margins(0.5)
 
 	# top 4 lenguages
 	ax5 = plt.subplot2grid((8,2), (5,1), rowspan=1)
 	len_top4.plot(kind='bar',color='#6d904f')
 	ax5.set_title("Languages",fontweight = 'bold', size=20)
-	plt.margins(0.05)
+	plt.margins(0.5)
 	plt.xticks(rotation=0)
 
 	#map
