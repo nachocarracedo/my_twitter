@@ -91,5 +91,6 @@ ENV/
 
 # this project
 project_ideas.txt
-data
+data/Sentiment Analysis Dataset.csv
 private.py
+other

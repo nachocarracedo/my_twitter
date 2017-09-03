@@ -303,9 +303,9 @@ if __name__ == "__main__":
 	#type of tweets timeseries
 	ax7 = plt.subplot2grid((8,2), (1,0), colspan=2)
 	ax7.set_title("Number of tweets by type - 1 month",fontweight = 'bold', size=20)
-	ax7.plot_date(ts_reply.date, ts_reply['count'], label='replies',ls='-',marker='.')
-	ax7.plot_date(ts_rt.date, ts_rt['count'], label='retweets',ls='-',marker='.')
-	ax7.plot_date(ts.date, ts['count'], label='tweets',ls='-',marker='.')
+	ax7.plot_date(ts_reply.date, ts_reply['count'], label='reply',ls='-',marker='.')
+	ax7.plot_date(ts_rt.date, ts_rt['count'], label='retweet',ls='-',marker='.')
+	ax7.plot_date(ts.date, ts['count'], label='tweet',ls='-',marker='.')
 	# set ticks to all days
 	plt.gca().xaxis.set_major_locator(mdates.DayLocator())
 	# limit axes	
@@ -361,6 +361,7 @@ if __name__ == "__main__":
 
 
 	#worldcloud
+	twitter_mask = './data/twitter_mask.png'
 	title = ["All Tweets", "Regular Tweets","Retweets","Replies"]
 	place = [(2,0),(2,1),(3,0),(3,1)]
 	i=0 # for plot titles
@@ -369,7 +370,8 @@ if __name__ == "__main__":
 		wordcloud = WordCloud(#stopwords=STOPWORDS,
 							  background_color='black',
 							  width=1800,
-							  height=1400
+							  height=1400,
+							  mask=twitter_mask
 							 ).generate(data)
 		#print wordcloud
 		plt.subplot2grid((8,2), place[i])
