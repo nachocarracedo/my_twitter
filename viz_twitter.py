@@ -4,6 +4,7 @@ warnings.filterwarnings('ignore')
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from mpl_toolkits.basemap import Basemap
@@ -26,6 +27,7 @@ import sklearn
 import requests
 import pickle
 import time
+import datetime
 
 from langdetect import detect
 
@@ -34,7 +36,7 @@ if __name__ == "__main__":
 	start = time.time()
 	############### get tweets
 	# twython auth
-	print("1/8 Getting tweets ... ")
+	print("1/8 Collecting tweets ... ")
 	twitter = Twython(settings.APP_KEY,
 					  settings.APP_SECRET,
 					  settings.OAUTH_TOKEN,
@@ -267,39 +269,96 @@ if __name__ == "__main__":
 		
 	print("8/8 Creating viz ... ")	
 	################################ VIZ ######################################
-	fig = plt.figure(figsize=(15,40))
+	fig = plt.figure(figsize=(15,35))
 
+	
 	#type of tweets
 	ax1 = plt.subplot2grid((8,2), (0,1))           
 	type_tweet.value_counts().plot(kind='bar', color=['#30a2da','#fc4f30','#e5ae38'])
 	ax1.set_title("Types of tweets",fontweight = 'bold', size=20)
 	plt.xticks(rotation=0)
+	plt.margins(0.05)
+	 
 	 
 	#account info
 	ax2 = plt.subplot2grid((8,2), (0,0)) 
-	style1 = dict(size=18, color='black')
-	ax2.text(0, 0.8, str("Name: "), **style1)
-	ax2.text(0, 0.6, "Creation: ", **style1)
-	ax2.text(0, 0.4, "Following: ", **style1)
-	ax2.text(0, 0.2, "Followers: ", **style1)
-	style2 = dict(size=18, color='black',fontweight = 'bold')
-	ax2.text(0.3, 0.8, str(name), **style2)
-	ax2.text(0.3, 0.6, str(date_creation[4:10].strip()+date_creation[-5:]), **style2)
-	ax2.text(0.3, 0.4, str(nfollowing), **style2)
-	ax2.text(0.3, 0.2, str(nfollowers), **style2)
+	
+	style1 = dict(size=17, color='black')
+	ax2.text(0.15, 0.75, str("Name: "), **style1)
+	ax2.text(0.15, 0.55, "Creation: ", **style1)
+	ax2.text(0.15, 0.35, "Following: ", **style1)
+	ax2.text(0.15, 0.15, "Followers: ", **style1)
+
+	style2 = dict(size=17, color='black',fontweight = 'bold', bbox={'facecolor':'red', 'alpha':0.4, 'pad':8})
+	ax2.text(0.45, 0.75, str(name), **style2)
+	ax2.text(0.45, 0.55, str(date_creation[4:10].strip()+date_creation[-5:]), **style2)
+	ax2.text(0.45, 0.35, str(nfollowing), **style2)
+	ax2.text(0.45, 0.15, str(nfollowers), **style2)
+
 	ax2.axis('off')
 	ax2.grid(False)
 	ax2.set_title("Account information",fontweight = 'bold', size=20)
 
+	
 	#type of tweets timeseries
 	ax7 = plt.subplot2grid((8,2), (1,0), colspan=2)
-	ax7.set_title("Type of tweeet - Time series last month",fontweight = 'bold', size=20)
-	ax7.plot(ts_reply.date, ts_reply['count'], label='replies')
-	ax7.plot(ts_rt.date, ts_rt['count'], label='retweets')
-	ax7.plot(ts.date, ts['count'], label='tweets')
-	plt.xticks(rotation=0)
+	ax7.set_title("Number of tweets by type - 1 month",fontweight = 'bold', size=20)
+	ax7.plot_date(ts_reply.date, ts_reply['count'], label='replies',ls='-',marker='.')
+	ax7.plot_date(ts_rt.date, ts_rt['count'], label='retweets',ls='-',marker='.')
+	ax7.plot_date(ts.date, ts['count'], label='tweets',ls='-',marker='.')
+	# set ticks to all days
+	plt.gca().xaxis.set_major_locator(mdates.DayLocator())
+	# limit axes	
+	start_date = ts.date.iloc[0] + datetime.timedelta(days=-1)
+	end_date = ts.date.iloc[-1] + datetime.timedelta(days=+1)
+	ax7.set_xlim([start_date,end_date])
+	ax7.set_ylim(ymin=0)
+	# format dates x labels
+	xfmt = mdates.DateFormatter('%d-%m')
+	ax7.xaxis.set_major_formatter(xfmt)
+
+	# mark weekends
+	def find_weekend_indices(datetime_array):
+		indices=[]
+		for i in range(len(datetime_array)):
+			if datetime_array[i].weekday()>=5:
+				indices.append(i)
+		
+		return indices
+
+	def highlight_weekend(weekend_indices,ax):
+		i=0
+		while i<len(weekend_indices):
+			ax7.axvspan(ts.date.iloc[weekend_indices[i]],
+						ts.date.iloc[weekend_indices[i]+1],
+						facecolor='green',
+						edgecolor='none',
+						alpha=.15)
+			i+=2					
+		return None
+
+	# replace month number with letters
+	def correct_labels(ax):
+		labels = [item.get_text() for item in ax.get_xticklabels()]
+		days=[label.split(" ")[0] for label in labels]
+		months=["Ja","Fb","Mr","Ap","My","Jn","Jl","Ag","Sp","Oc","Nv","Dc"]
+		final_labels=[]
+		for i in range(len(days)):
+			a=days[i].split("-")
+			final_labels.append(a[0]+"\n"+months[int(a[1])-1])
+			
+		#don't show 1st and last label
+		final_labels[0] = ''
+		final_labels[-1] = ''
+		ax.set_xticklabels(final_labels)
+		
+	fig.canvas.draw()
+	correct_labels(ax7)
+	highlight_weekend(find_weekend_indices(ts.date),ax7)
+
 	plt.legend()
-	plt.margins(0.5)
+	plt.margins(0.05)
+
 
 	#worldcloud
 	title = ["All Tweets", "Regular Tweets","Retweets","Replies"]
@@ -317,26 +376,27 @@ if __name__ == "__main__":
 		plt.imshow(wordcloud,extent=[0,100,0,1], aspect='auto')
 		#plt.extend(extent=[0,100,0,1], aspect='auto')
 		plt.title(title[i],fontweight = 'bold', size=20)
-		plt.axis('off')
-		plt.margins(0.5)
-		#plt.show()
+		plt.axis('off')	   
+		
+		plt.margins(0)
+		plt.tight_layout()
 		i+=1
 
-	
-	# top hashtags barh plot
-	ax3 = plt.subplot2grid((8,2), (4,0), rowspan=2) 
+		
+	# hashtags barh plot	
+	ax3 = plt.subplot2grid((8,2), (4,0), rowspan=2) 	
 	bar_heights =  top20hash['count'].values
 	bar_positions = np.arange(len(bar_heights))  
 	tick_positions = range(0,20) 
+
 	ax3.barh(bar_positions, bar_heights, 0.5, align='center')#, color='red')
 	ax3.set_yticks(tick_positions)
 	ax3.set_yticklabels(top20hash['hashtag'].values,)
 	ax3.set_yticks(tick_positions)
-	ax3.set_xlabel("Count")
-	ax3.set_ylabel("Hashtags")
 	ax3.set_title("Top 20 Hashtags",fontweight = 'bold', size=20)
 	plt.gca().invert_yaxis()
-	plt.margins(0.5)
+	plt.margins(0.05)
+	
 
 	# sentiment analysis
 	ax4 = plt.subplot2grid((8,2), (4,1), rowspan=1)
@@ -344,20 +404,23 @@ if __name__ == "__main__":
 			autopct='%1.1f%%', shadow=False,
 			startangle=90, labels=["Positive+Neutral","Negative"])#,colors=["blue","red"])
 	plt.title("Sentiment Analysis",fontweight = 'bold', size=20)
-	plt.margins(0.5)
-
-	# top 4 lenguages
+	plt.margins(0.05)
+	
+	
+	# languages
 	ax5 = plt.subplot2grid((8,2), (5,1), rowspan=1)
 	len_top4.plot(kind='bar',color='#6d904f')
 	ax5.set_title("Languages",fontweight = 'bold', size=20)
-	plt.margins(0.5)
+	plt.margins(0.05)
 	plt.xticks(rotation=0)
 
+	
 	#map
 	ax6 = plt.subplot2grid((8,2), (6,0), colspan=2, rowspan=2)
 	m = Basemap()
 	m.bluemarble() #m.etopo()
 	m.drawcountries()
+
 	# cities
 	marker_size = [6,10,14,19,24]
 
@@ -381,12 +444,8 @@ if __name__ == "__main__":
 	leg.legendHandles[4]._legmarker.set_markersize(18)
 
 	plt.title("Accounts you follow MAP",fontweight = 'bold', size=20)
-	plt.margins(0.5)
+	plt.margins(0.05)	
 
-	plt.savefig('./images/twitter_viz.png', bbox_inches='tight')
-	#plt.tight_layout()
-	#plt.show()
-	
-	
+	plt.savefig('.\\images\\twitter_viz.png', bbox_inches='tight')		
 	print("Done. Find your viz in /images folder")
 	print('The script ran for ', time.time()-start, 'seconds.')

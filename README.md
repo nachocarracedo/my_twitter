@@ -2,14 +2,17 @@
 
 ## SUMMARY
 
-This script will output a visualization of you twitter account. The script will gather the last 200 tweets of all the accounts you follow and it will create a visualization that shows:
+This script will output a visualization of you twitter account. The script will gather the last 200 tweets of all the accounts you follow and it will create a visualization that shows the following:
 
-* Username, account creating date, and number of followers and following
+* Username, account creation date, number of followers, and of accounts you follow
 * Number of tweets, retweets, and replies
-* Wordcloud of tweets, retweets, replies, and all tweets together(This blog post explains how the wordclouds are done: http://peekaboo-vision.blogspot.de/2012/11/a-wordcloud-in-python.html)
+* Time series of last month's number of tweets
+* Wordcloud of tweets, retweets, replies, and all tweets together (This blog post explains how the wordclouds are done: http://peekaboo-vision.blogspot.de/2012/11/a-wordcloud-in-python.html)
 * Top 20 hashtags
-* A map that shows where the people/accounts you follow are located 
+* Top 4 languages all tweets
 * Sentiment analysis of tweets (neutral tweets count as positive)
+* A map that shows where the people/accounts you follow are located 
+
 
 
 ## OUTPUT
@@ -17,13 +20,11 @@ This script will output a visualization of you twitter account. The script will 
 As an example, here is the visualization I got for my twitter account:
 
 ![Alt text](/images/twitter_viz.png?raw=true)
-
+ 
 
 ## FILES:
 
-* my_twitter_viz.ipynb: I put all together to get 1 final viz. This is the notebook you should use if you want to get your own tweeter viz.
-* twitter.ipynb: Notebook where I used as scratch paper to clean data, EDA, play with the plots settings, and to experiment with different algorithms for sentiment analysis. Also I played a bit with LDA to extract tweet topics.
-* viz_your_twitter.py: Script that outputs visualization
+* viz_your_twitter.py: Script that outputs the visualization
 
 
 ## USE 
@@ -42,7 +43,7 @@ As an example, here is the visualization I got for my twitter account:
 
 4) Add your keys to seetings.py file. Also add extra stopwords so they don't show up in wordclouds.
 
-5) create a folder inside the projected called *data* and put inside *Sentiment Analysis Dataset.csv*. You can get this file from  http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/ 
+5) create a folder inside the projected called *data* and put inside *Sentiment Analysis Dataset.csv*. You can get this file from  http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/ . 
 
 5) Run script and enjoy your viz!!
 
