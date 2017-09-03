@@ -1,5 +1,13 @@
 ## VISUALIZE A TWITTER ACCOUNT
 
+
+## OUTPUT
+
+As an example, here is the visualization I got for my twitter account:
+
+![Alt text](/images/twitter_viz.png?raw=true)
+
+
 ## SUMMARY
 
 This script will output a visualization of you twitter account. The script will gather the last 200 tweets of all the accounts you follow and it will create a visualization that shows the following:
@@ -13,14 +21,6 @@ This script will output a visualization of you twitter account. The script will 
 * Sentiment analysis of tweets (neutral tweets count as positive)
 * A map that shows where the people/accounts you follow are located 
 
-
-
-## OUTPUT
-
-As an example, here is the visualization I got for my twitter account:
-
-![Alt text](/images/twitter_viz.png?raw=true)
- 
 
 ## FILES:
 
@@ -43,7 +43,7 @@ As an example, here is the visualization I got for my twitter account:
 
 4) Add your keys to seetings.py file. Also add extra stopwords so they don't show up in wordclouds.
 
-5) create a folder inside the projected called *data* and put inside *Sentiment Analysis Dataset.csv*. You can get this file from  http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/ . 
+5) Inside the folder *data* place  the file *Sentiment Analysis Dataset.csv*. You can get this file from  http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/ . 
 
 5) Run script and enjoy your viz!!
 
