@@ -24,7 +24,7 @@ As an example, here is the visualization I got for my twitter account:
 
 ## FILES:
 
-* viz_your_twitter.py: Script that outputs the visualization
+* viz_twitter.py: Script that outputs the visualization
 
 
 ## USE 
